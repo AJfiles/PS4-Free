@@ -1,23 +1,65 @@
 <html manifest="psfree_lapse.cache">
 <head>
-<title>PSFree-Lapse Exploit For PS4 9.00</title>
-<link rel="shortcut icon" href="favicon.ico"></link>
+<title>Instalando caché - PS4 WebKit</title>
 <style>
-body{background-image: url("bg.jpg");background-repeat: no-repeat;background-size:70%;background-position: center;background-color: white;
-color:black;font-size:20px;text-align:center;margin:0;overflow:hidden;}
-.info{overflow: hidden;position: fixed;position: absolute;top: 45%;left: 50%;font-size: 25px;font-family: sans-serif;color: black;transform: translate(-50%, -50%);}
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #0a0a1a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .info {
+    text-align: center;
+    animation: fadeIn 1s;
+  }
+  .progress {
+    width: 300px;
+    height: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px auto;
+    border: 1px solid #00d4ff;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00d4ff, #ff4081);
+    transition: width 0.3s;
+  }
+  #percent {
+    font-size: 2rem;
+    margin: 10px 0;
+  }
+  @keyframes fadeIn { from {opacity: 0} to {opacity: 1} }
 </style>
 <script>
 history.replaceState(null,null,'index.html');var histlength=history.length;history.go(-histlength);
-function DLProgress(e){Percent=(Math.round(e.loaded / e.total * 100));msgs.innerHTML="Installing Offline Cache ... " + Percent + "%"};
-function DisplayCacheProgress(){
-setTimeout(function(){msgs.innerHTML="Cache Installed Successfully";},2000);
-setTimeout(function(){location.reload();},3000);
+function DLProgress(e){
+  Percent=(Math.round(e.loaded / e.total * 100));
+  document.getElementById('percent').textContent=Percent+"%";
+  document.getElementById('fill').style.width=Percent+"%";
 }
-window.applicationCache.addEventListener("progress",DLProgress,false);window.applicationCache.oncached=function(e){DisplayCacheProgress();};window.applicationCache.onupdateready=function(e){DisplayCacheProgress();};
+function DisplayCacheProgress(){
+  setTimeout(function(){document.getElementById('msgs').innerHTML="Cache Instalada Correctamente";},2000);
+  setTimeout(function(){location.reload();},3000);
+}
+window.applicationCache.addEventListener("progress",DLProgress,false);
+window.applicationCache.oncached=function(e){DisplayCacheProgress();};
+window.applicationCache.onupdateready=function(e){DisplayCacheProgress();};
 </script>
 </head>
-<body style=overflow:hidden>
-<div id=msgs class=info style='-webkit-font-feature-settings:"tnum";font-feature-settings:"tnum";'></div>
+<body>
+<div class="info">
+  <h2>Instalando caché offline</h2>
+  <div class="progress"><div class="progress-fill" id="fill"></div></div>
+  <div id="percent">0%</div>
+  <div id="msgs">Descargando...</div>
+</div>
 </body>
 </html>

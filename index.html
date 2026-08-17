@@ -1,47 +1,180 @@
-<!-- Copyright (C) 2023-2025 anonymous
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PS4 9.00 WebKit</title>
+<link rel="prefetch" href="goldhen.bin">
+<link rel="prefetch" href="aio_patches.bin">
+<style>
+  :root {
+    --bg: #0a0a1a;
+    --accent: #00d4ff;
+    --secondary: #ff4081;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #0a0a1a;
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Fondo animado con partículas usando CSS */
+  #particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent);
+    animation: float 8s infinite linear;
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0); opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+  #app {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .hidden { display: none !important; }
+  #activateBtn {
+    padding: 20px 50px;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    box-shadow: 0 0 30px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 30px var(--accent); }
+    50% { transform: scale(1.05); box-shadow: 0 0 60px var(--accent); }
+    100% { transform: scale(1); box-shadow: 0 0 30px var(--accent); }
+  }
+  #loading { width: 100%; }
+  #progressContainer {
+    width: 80%;
+    max-width: 500px;
+    margin: 30px auto;
+  }
+  #progressBar {
+    height: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--accent);
+  }
+  #progressFill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--secondary));
+    transition: width 0.3s;
+  }
+  #console {
+    width: 80%;
+    max-width: 600px;
+    height: 150px;
+    margin: 20px auto;
+    background: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    font-family: monospace;
+    text-align: left;
+    color: #0f0;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+  <div id="particles"></div>
+  <div id="app">
+    <!-- Botón central -->
+    <div id="menu">
+      <h1 style="font-size:3rem; text-shadow:0 0 20px var(--accent);">PS4 9.00</h1>
+      <p style="color:#ccc;">Exploit + GoldHEN</p>
+      <button id="activateBtn">ACTIVAR GOLDHEN</button>
+    </div>
+    <!-- Pantalla de carga -->
+    <div id="loading" class="hidden">
+      <h2>Ejecutando exploit...</h2>
+      <div id="progressContainer">
+        <div id="progressBar"><div id="progressFill"></div></div>
+      </div>
+      <div id="status">Preparando...</div>
+      <pre id="console"></pre>
+    </div>
+  </div>
 
-This file is part of PSFree.
+  <script>
+    // Generar partículas
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (5 + Math.random() * 5) + 's';
+      p.style.animationDelay = (Math.random() * 5) + 's';
+      particlesContainer.appendChild(p);
+    }
+  </script>
 
-PSFree is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+  <script type="module">
+    import { startExploit } from './alert.mjs';
 
-PSFree is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+    const menu = document.getElementById('menu');
+    const loading = document.getElementById('loading');
+    const progressFill = document.getElementById('progressFill');
+    const statusDiv = document.getElementById('status');
+    const consoleEl = document.getElementById('console');
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-<html>
-    <head>
-        <meta charset='utf-8'>
-        <title>PSFree-Lapse Exploit For PS4 9.00</title>
-        <style>
-            @font-face {
-                font-family: 'logging';
-                src: url('fonts/LiberationMono-Regular.ttf');
-            }
-            #console {
-                font-family: 'logging';
-            }
-        </style>
-        <script>
-        if (window.applicationCache.status=='0')
-        {
-          window.location.replace("cache.html");
-        }
-        </script>
-    </head>
-    <body>
-        PSFree: A PS4/PS5 Exploit Chain
-        <br>
-        <br>
-        See <a href='./about.html' data-jslicense='1'>JavaScript license information</a> for the
-        source code and license.<br>
-        <pre id='console'></pre>
-    </body>
-    <script type='module' src='./alert.mjs'></script>
+    window.addLog = (msg) => {
+      consoleEl.textContent += msg + '\n';
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    };
+
+    // Redirigir console.log al div
+    const originalLog = console.log;
+    console.log = function(...args) {
+      originalLog.apply(console, args);
+      window.addLog(args.join(' '));
+    };
+
+    document.getElementById('activateBtn').addEventListener('click', () => {
+      menu.classList.add('hidden');
+      loading.classList.remove('hidden');
+      window.addLog('Iniciando PSFree-Lapse...');
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 5;
+        if (progress > 90) progress = 90;
+        progressFill.style.width = progress + '%';
+      }, 500);
+
+      startExploit().then(() => {
+        clearInterval(interval);
+        progressFill.style.width = '100%';
+        statusDiv.textContent = 'GoldHEN cargado correctamente';
+        window.addLog('GoldHEN activado');
+      }).catch(err => {
+        clearInterval(interval);
+        statusDiv.textContent = 'Error: ' + err;
+      });
+    });
+  </script>
+</body>
 </html>

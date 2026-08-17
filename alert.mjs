@@ -15,38 +15,47 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-// We can't just open a console on the ps4 browser, make sure the errors thrown
-// by our program are alerted.
+// Manejamos errores globales y los mostramos en el div#console si existe,
+// o con alert() como fallback.
 
-// We don't use a custom logging function to avoid a dependency on a logging
-// module since we want this file to stand alone. We don't want to copy the
-// log function here either for the sake avoiding dependencies since using
-// alert() is good enough.
-
-// We log the line and column numbers as well since some exceptions (like
-// SyntaxError) do not show it in the stack trace.
+function notifyError(msg) {
+  if (window.addLog) {
+    window.addLog('ERROR: ' + msg);
+  } else {
+    alert(msg);
+  }
+}
 
 addEventListener('unhandledrejection', event => {
-    const reason = event.reason;
-    alert(
-        'Unhandled rejection\n'
-        + `${reason}\n`
-        + `${reason.sourceURL}:${reason.line}:${reason.column}\n`
-        + `${reason.stack}`
-    );
+  const reason = event.reason;
+  notifyError(
+    'Unhandled rejection\n' +
+    `${reason}\n` +
+    `${reason.sourceURL}:${reason.line}:${reason.column}\n` +
+    `${reason.stack}`
+  );
 });
 
 addEventListener('error', event => {
-    const reason = event.error;
-    alert(
-        'Unhandled error\n'
-        + `${reason}\n`
-        + `${reason.sourceURL}:${reason.line}:${reason.column}\n`
-        + `${reason.stack}`
-    );
-    return true;
+  const reason = event.error;
+  notifyError(
+    'Unhandled error\n' +
+    `${reason}\n` +
+    `${reason.sourceURL}:${reason.line}:${reason.column}\n` +
+    `${reason.stack}`
+  );
+  return true;
 });
 
-// we have to dynamically import the program if we want to catch its syntax
-// errors
-import('./psfree.mjs');
+// Función que será llamada desde el botón para iniciar el exploit.
+export async function startExploit() {
+  try {
+    // Importa dinámicamente el exploit principal.
+    await import('./psfree.mjs');
+  } catch (e) {
+    notifyError('Exploit failed: ' + e);
+    throw e;
+  }
+}
+
+// Nota: no importamos psfree.mjs automáticamente; esperamos a que el usuario pulse el botón.
