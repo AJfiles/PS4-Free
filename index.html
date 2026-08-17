@@ -2,118 +2,167 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>PS4 9.00 WebKit</title>
+<title>AJ PSFree 1.5.0b - PS4 9.00</title>
 <link rel="prefetch" href="goldhen.bin">
 <link rel="prefetch" href="aio_patches.bin">
 <style>
   :root {
+    --accent: #00f0ff;
+    --secondary: #ff2a6d;
     --bg: #0a0a1a;
-    --accent: #00d4ff;
-    --secondary: #ff4081;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
   body {
-    margin: 0;
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: #0a0a1a;
-    color: white;
+    background: var(--bg);
+    color: #fff;
     height: 100vh;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  /* Fondo animado con partículas usando CSS */
-  #particles {
+  #backgroundCanvas {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
     z-index: 0;
-    overflow: hidden;
+    pointer-events: none;
   }
-  .particle {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: var(--accent);
-    animation: float 8s infinite linear;
-  }
-  @keyframes float {
-    0% { transform: translateY(100vh) scale(0); opacity: 1; }
-    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-  }
-  #app {
+  .container {
     position: relative;
     z-index: 1;
     text-align: center;
+    padding: 20px;
+    width: 100%;
   }
   .hidden { display: none !important; }
-  #activateBtn {
-    padding: 20px 50px;
+
+  /* ---------- MENÚ ---------- */
+  #menu h1 {
     font-size: 2.5rem;
-    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    font-weight: bold;
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  #menu p {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 30px;
+  }
+  #autoToggle {
+    margin: 20px 0;
+    font-size: 1rem;
+    color: #ccc;
+  }
+  #autoToggle input {
+    margin-right: 8px;
+  }
+  #activateBtn {
+    padding: 18px 50px;
+    font-size: 2rem;
+    font-weight: bold;
     color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
     border: none;
     border-radius: 60px;
     cursor: pointer;
     box-shadow: 0 0 30px var(--accent);
     animation: pulse 2s infinite;
+    transition: transform 0.2s;
+  }
+  #activateBtn:active {
+    transform: scale(0.95);
   }
   @keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 30px var(--accent); }
-    50% { transform: scale(1.05); box-shadow: 0 0 60px var(--accent); }
-    100% { transform: scale(1); box-shadow: 0 0 30px var(--accent); }
+    0%   { box-shadow: 0 0 30px var(--accent); }
+    50%  { box-shadow: 0 0 60px var(--accent); }
+    100% { box-shadow: 0 0 30px var(--accent); }
   }
-  #loading { width: 100%; }
+
+  /* ---------- PANTALLA DE CARGA ---------- */
+  #loading h2 {
+    font-size: 1.8rem;
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--accent);
+    margin-bottom: 20px;
+  }
   #progressContainer {
     width: 80%;
     max-width: 500px;
-    margin: 30px auto;
+    margin: 20px auto;
   }
   #progressBar {
-    height: 20px;
+    height: 8px;
     background: rgba(255,255,255,0.1);
-    border-radius: 10px;
+    border-radius: 4px;
     overflow: hidden;
-    border: 1px solid var(--accent);
+    position: relative;
   }
-  #progressFill {
+  #progressBar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
     height: 100%;
-    width: 0%;
     background: linear-gradient(90deg, var(--accent), var(--secondary));
-    transition: width 0.3s;
+    border-radius: 4px;
+    animation: indeterminate 1.2s infinite;
+  }
+  @keyframes indeterminate {
+    0%   { left: -50%; }
+    100% { left: 100%; }
+  }
+  #status {
+    font-size: 1rem;
+    color: #ccc;
+    margin: 10px 0;
   }
   #console {
     width: 80%;
     max-width: 600px;
-    height: 150px;
+    height: 200px;
     margin: 20px auto;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.7);
+    border: 1px solid var(--accent);
     border-radius: 10px;
     padding: 10px;
     overflow-y: auto;
-    font-family: monospace;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
     text-align: left;
-    color: #0f0;
+    color: #00ff88;
     white-space: pre-wrap;
   }
 </style>
 </head>
 <body>
-  <div id="particles"></div>
-  <div id="app">
-    <!-- Botón central -->
+  <canvas id="backgroundCanvas"></canvas>
+
+  <div class="container">
+    <!-- MENÚ PRINCIPAL -->
     <div id="menu">
-      <h1 style="font-size:3rem; text-shadow:0 0 20px var(--accent);">PS4 9.00</h1>
-      <p style="color:#ccc;">Exploit + GoldHEN</p>
+      <h1>AJ PSFree 1.5.0b</h1>
+      <p>PS4 9.00</p>
+      <div id="autoToggle">
+        <label>
+          <input type="checkbox" id="autoCheckbox"> Auto-activar en 10s
+        </label>
+      </div>
       <button id="activateBtn">ACTIVAR GOLDHEN</button>
     </div>
-    <!-- Pantalla de carga -->
+
+    <!-- PANTALLA DE CARGA -->
     <div id="loading" class="hidden">
       <h2>Ejecutando exploit...</h2>
       <div id="progressContainer">
-        <div id="progressBar"><div id="progressFill"></div></div>
+        <div id="progressBar"></div>
       </div>
       <div id="status">Preparando...</div>
       <pre id="console"></pre>
@@ -121,16 +170,44 @@
   </div>
 
   <script>
-    // Generar partículas
-    const particlesContainer = document.getElementById('particles');
-    for (let i = 0; i < 50; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.animationDuration = (5 + Math.random() * 5) + 's';
-      p.style.animationDelay = (Math.random() * 5) + 's';
-      particlesContainer.appendChild(p);
+    // ---------- PARTÍCULAS LIGERAS (canvas) ----------
+    const canvas = document.getElementById('backgroundCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const NUM_PARTICLES = 8;
+    for (let i = 0; i < NUM_PARTICLES; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: 2 + Math.random() * 3
+      });
     }
+
+    function drawParticles() {
+      if (document.getElementById('loading').classList.contains('hidden') === false) {
+        // Si la pantalla de carga está visible, detener partículas
+        requestAnimationFrame(drawParticles);
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0,240,255,0.7)';
+        ctx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
   </script>
 
   <script type="module">
@@ -138,41 +215,81 @@
 
     const menu = document.getElementById('menu');
     const loading = document.getElementById('loading');
-    const progressFill = document.getElementById('progressFill');
     const statusDiv = document.getElementById('status');
     const consoleEl = document.getElementById('console');
+    const activateBtn = document.getElementById('activateBtn');
+    const autoCheckbox = document.getElementById('autoCheckbox');
 
-    window.addLog = (msg) => {
-      consoleEl.textContent += msg + '\n';
-      consoleEl.scrollTop = consoleEl.scrollHeight;
-    };
-
-    // Redirigir console.log al div
+    // Redirigir console.log al div de consola
     const originalLog = console.log;
     console.log = function(...args) {
       originalLog.apply(console, args);
-      window.addLog(args.join(' '));
+      consoleEl.textContent += args.join(' ') + '\n';
+      consoleEl.scrollTop = consoleEl.scrollHeight;
     };
 
-    document.getElementById('activateBtn').addEventListener('click', () => {
+    // Manejar autoactivación
+    let countdownTimer = null;
+
+    function startCountdown(seconds) {
+      let remaining = seconds;
+      activateBtn.disabled = true;
+      activateBtn.textContent = `Activando en ${remaining}s...`;
+      countdownTimer = setInterval(() => {
+        remaining--;
+        if (remaining > 0) {
+          activateBtn.textContent = `Activando en ${remaining}s...`;
+        } else {
+          clearInterval(countdownTimer);
+          activateBtn.disabled = false;
+          activateBtn.textContent = 'ACTIVAR GOLDHEN';
+          activateBtn.click();
+        }
+      }, 1000);
+    }
+
+    // Al cargar, restaurar preferencia
+    const savedAuto = localStorage.getItem('autoActivate');
+    if (savedAuto === 'true') {
+      autoCheckbox.checked = true;
+      startCountdown(10);
+    }
+
+    autoCheckbox.addEventListener('change', () => {
+      if (autoCheckbox.checked) {
+        localStorage.setItem('autoActivate', 'true');
+        startCountdown(10);
+      } else {
+        localStorage.setItem('autoActivate', 'false');
+        if (countdownTimer) {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+        activateBtn.disabled = false;
+        activateBtn.textContent = 'ACTIVAR GOLDHEN';
+      }
+    });
+
+    // Acción de activar
+    activateBtn.addEventListener('click', () => {
+      // Detener countdown si está activo
+      if (countdownTimer) {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+      }
       menu.classList.add('hidden');
       loading.classList.remove('hidden');
-      window.addLog('Iniciando PSFree-Lapse...');
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 5;
-        if (progress > 90) progress = 90;
-        progressFill.style.width = progress + '%';
-      }, 500);
+      statusDiv.textContent = 'Ejecutando exploit...';
+      consoleEl.textContent = ''; // limpiar consola
+
+      console.log('Iniciando PSFree-Lapse...');
 
       startExploit().then(() => {
-        clearInterval(interval);
-        progressFill.style.width = '100%';
         statusDiv.textContent = 'GoldHEN cargado correctamente';
-        window.addLog('GoldHEN activado');
+        console.log('GoldHEN activado');
       }).catch(err => {
-        clearInterval(interval);
         statusDiv.textContent = 'Error: ' + err;
+        console.log('Error: ' + err);
       });
     });
   </script>
