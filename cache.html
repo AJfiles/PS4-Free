@@ -1,11 +1,17 @@
 <html manifest="psfree_lapse.cache">
 <head>
+<meta charset="utf-8">
 <title>AJ PSFree 1.5.0b - PS4 9.00</title>
 <style>
+  :root {
+    --accent: #00f0ff;
+    --secondary: #ff2a6d;
+    --bg: #0a0a1a;
+  }
   body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: #0a0a1a;
+    background: var(--bg);
     color: white;
     display: flex;
     align-items: center;
@@ -13,34 +19,71 @@
     height: 100vh;
     overflow: hidden;
   }
-  .info { text-align: center; }
+  .info {
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+  h2 {
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--accent);
+    margin-bottom: 20px;
+  }
   .progress {
-    width: 320px;
-    height: 8px;
+    width: 100%;
+    height: 12px;
     background: rgba(255,255,255,0.1);
-    border-radius: 4px;
+    border-radius: 6px;
     overflow: hidden;
     margin: 20px auto;
+    border: 1px solid var(--accent);
   }
   .progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #00f0ff, #ff2a6d);
+    background: linear-gradient(90deg, var(--accent), var(--secondary));
+    border-radius: 6px;
     transition: width 0.3s;
   }
-  #percent { font-size: 2rem; }
-  #msgs { color: #ccc; }
+  #percent {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent);
+  }
+  #msgs {
+    color: #ccc;
+    min-height: 24px;
+  }
+  .back-btn {
+    margin-top: 30px;
+    padding: 12px 30px;
+    font-size: 1rem;
+    background: var(--secondary);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--secondary);
+    display: none;
+  }
+  .back-btn:hover {
+    background: #ff4d8d;
+  }
 </style>
 <script>
 history.replaceState(null,null,'index.html');var histlength=history.length;history.go(-histlength);
 function DLProgress(e){
-  Percent=(Math.round(e.loaded / e.total * 100));
-  document.getElementById('percent').textContent=Percent+"%";
-  document.getElementById('fill').style.width=Percent+"%";
+  var percent = Math.round(e.loaded / e.total * 100);
+  document.getElementById('percent').textContent = percent + "%";
+  document.getElementById('fill').style.width = percent + "%";
+  document.getElementById('msgs').textContent = "Descargando caché... " + percent + "%";
 }
 function DisplayCacheProgress(){
-  setTimeout(function(){document.getElementById('msgs').innerHTML="Cache Instalada Correctamente";},2000);
-  setTimeout(function(){location.reload();},3000);
+  document.getElementById('msgs').textContent = "Caché instalada correctamente";
+  document.getElementById('percent').textContent = "100%";
+  document.getElementById('fill').style.width = "100%";
+  document.getElementById('backBtn').style.display = "inline-block";
 }
 window.applicationCache.addEventListener("progress",DLProgress,false);
 window.applicationCache.oncached=function(e){DisplayCacheProgress();};
@@ -52,7 +95,8 @@ window.applicationCache.onupdateready=function(e){DisplayCacheProgress();};
   <h2>AJ PSFree 1.5.0b - PS4 9.00</h2>
   <div class="progress"><div class="progress-fill" id="fill"></div></div>
   <div id="percent">0%</div>
-  <div id="msgs">Descargando...</div>
+  <div id="msgs">Preparando...</div>
+  <button id="backBtn" class="back-btn" onclick="window.location.href='index.html'">Volver al inicio</button>
 </div>
 </body>
 </html>
