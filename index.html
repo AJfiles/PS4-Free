@@ -183,16 +183,24 @@ if (window.applicationCache.status == 0) {
     fill: currentColor;
   }
   .qr-btn {
-    font-size: 0.7rem;
-    padding: 4px 10px;
+    font-size: 0.9rem;              /* más grande */
+    padding: 8px 18px;              /* más grande */
     background: rgba(0, 240, 255, 0.1);
-    border: 1px solid var(--accent);
+    border: 2px solid var(--accent);
     color: var(--accent);
-    border-radius: 10px;
+    border-radius: 20px;
     cursor: pointer;
+    animation: qrGlow 2s infinite;  /* animación suave */
+    transition: transform 0.2s;
   }
   .qr-btn:hover {
-    background: rgba(0, 240, 255, 0.2);
+    background: rgba(0, 240, 255, 0.25);
+    transform: scale(1.1);
+  }
+  @keyframes qrGlow {
+    0%   { box-shadow: 0 0 5px rgba(0,240,255,0.3); }
+    50%  { box-shadow: 0 0 15px rgba(0,240,255,0.6); }
+    100% { box-shadow: 0 0 5px rgba(0,240,255,0.3); }
   }
 
   /* ---------- PANTALLA DE CARGA ---------- */
