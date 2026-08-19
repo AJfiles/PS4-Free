@@ -3,11 +3,16 @@
 <head>
 <meta charset="utf-8">
 <title>AJ PSFree 1.5.0b - PS4 9.00</title>
+
+<!-- Favicon inline (SVG) -->
+<link rel="icon" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%230a0a1a"/><text x="50" y="68" font-size="52" text-anchor="middle" fill="%2300f0ff" font-family="Arial" font-weight="bold">AJ</text></svg>'>
+
 <script>
 if (window.applicationCache.status == 0) {
   window.location.replace("cache.html");
 }
 </script>
+
 <style>
   :root {
     --accent: #00f0ff;
@@ -74,10 +79,10 @@ if (window.applicationCache.status == 0) {
   #menu p {
     font-size: 1.2rem;
     color: #ccc;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
   #autoToggle {
-    margin: 20px 0;
+    margin: 15px 0;
     font-size: 1rem;
     color: #ccc;
   }
@@ -106,9 +111,25 @@ if (window.applicationCache.status == 0) {
     100% { box-shadow: 0 0 30px var(--accent); }
   }
 
-  /* Botón instalar caché */
-  .cache-btn {
-    margin-top: 15px;
+  /* Contador de éxitos/fallos */
+  #counter {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  #counter span {
+    margin: 0 8px;
+  }
+
+  /* Botones secundarios */
+  .secondary-buttons {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cache-btn, .about-btn {
     padding: 10px 20px;
     font-size: 0.9rem;
     color: var(--accent);
@@ -118,7 +139,7 @@ if (window.applicationCache.status == 0) {
     cursor: pointer;
     transition: background 0.3s;
   }
-  .cache-btn:hover {
+  .cache-btn:hover, .about-btn:hover {
     background: rgba(0, 240, 255, 0.2);
   }
 
@@ -131,7 +152,7 @@ if (window.applicationCache.status == 0) {
 
   /* Redes sociales */
   .social-links {
-    margin-top: 30px;
+    margin-top: 25px;
     display: flex;
     gap: 20px;
     justify-content: center;
@@ -155,13 +176,6 @@ if (window.applicationCache.status == 0) {
     fill: currentColor;
   }
 
-  /* Créditos */
-  .credits {
-    margin-top: 20px;
-    font-size: 0.65rem;
-    color: #555;
-  }
-
   /* ---------- PANTALLA DE CARGA ---------- */
   #loading h2 {
     font-size: 1.8rem;
@@ -181,30 +195,22 @@ if (window.applicationCache.status == 0) {
     overflow: hidden;
     position: relative;
   }
-  #progressBar::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -50%;
-    width: 50%;
+  #progressFill {
     height: 100%;
+    width: 0%;
     background: linear-gradient(90deg, var(--accent), var(--secondary));
     border-radius: 4px;
-    animation: indeterminate 1.2s infinite;
+    transition: width 0.3s;
   }
-  @keyframes indeterminate {
-    0%   { left: -50%; }
-    100% { left: 100%; }
-  }
-  #status {
-    font-size: 1rem;
+  #stageText {
+    margin-top: 10px;
+    font-size: 0.95rem;
     color: #ccc;
-    margin: 10px 0;
   }
   #console {
     width: 80%;
     max-width: 600px;
-    height: 200px;
+    height: 180px;
     margin: 20px auto;
     background: rgba(0,0,0,0.7);
     border: 1px solid var(--accent);
@@ -227,6 +233,56 @@ if (window.applicationCache.status == 0) {
     cursor: pointer;
     font-size: 1rem;
   }
+
+  /* ---------- MODAL ACERCA DE ---------- */
+  #aboutModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #aboutModal.hidden {
+    display: none;
+  }
+  .about-content {
+    background: #0a0a1a;
+    border: 1px solid var(--accent);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+  }
+  .about-content h2 {
+    color: var(--accent);
+    margin-bottom: 15px;
+  }
+  .about-content p, .about-content li {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+  .about-content ul {
+    list-style-position: inside;
+    margin-bottom: 15px;
+  }
+  .close-about {
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 1rem;
+    background: var(--secondary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -241,9 +297,20 @@ if (window.applicationCache.status == 0) {
         </label>
       </div>
       <button id="activateBtn">ACTIVAR GOLDHEN</button>
-      <button class="cache-btn" onclick="window.location.href='cache.html'">Instalar caché (para usarse sin internet)</button>
+
+      <!-- Contador de éxitos/fallos -->
+      <div id="counter">
+        ✔ Éxitos: <span id="successCount">0</span> ✘ Fallos: <span id="failCount">0</span>
+      </div>
+
+      <!-- Botones secundarios -->
+      <div class="secondary-buttons">
+        <button class="cache-btn" onclick="window.location.href='cache.html'">Instalar caché <small>(usar sin internet)</small></button>
+        <button class="about-btn" onclick="document.getElementById('aboutModal').classList.remove('hidden')">Acerca de</button>
+      </div>
       <div id="cacheStatus"></div>
 
+      <!-- Redes sociales -->
       <div class="social-links">
         <a class="social-link" href="https://www.youtube.com/@Oficial-AJ" target="_blank">
           <svg viewBox="0 0 24 24"><path d="M23 12s0-3.2-.4-4.7c-.2-.8-.9-1.5-1.7-1.7C19.4 5 12 5 12 5s-7.4 0-8.9.6c-.8.2-1.5.9-1.7 1.7C1 8.8 1 12 1 12s0 3.2.4 4.7c.2.8.9 1.5 1.7 1.7 1.5.6 8.9.6 8.9.6s7.4 0 8.9-.6c.8-.2 1.5-.9 1.7-1.7.4-1.5.4-4.7.4-4.7zM9.8 15.5V8.5l6.2 3.5-6.2 3.5z"/></svg>
@@ -258,17 +325,32 @@ if (window.applicationCache.status == 0) {
           Web
         </a>
       </div>
-      <div class="credits">Gracias a PSFree, Kameleon, Sleirsgoevy y todos los desarrolladores</div>
     </div>
 
     <!-- PANTALLA DE CARGA -->
     <div id="loading" class="hidden">
       <h2>Ejecutando exploit...</h2>
       <div id="progressContainer">
-        <div id="progressBar"></div>
+        <div id="progressBar"><div id="progressFill"></div></div>
       </div>
-      <div id="status">Preparando...</div>
+      <div id="stageText">Preparando...</div>
       <pre id="console"></pre>
+    </div>
+  </div>
+
+  <!-- MODAL ACERCA DE -->
+  <div id="aboutModal" class="hidden">
+    <div class="about-content">
+      <h2>Acerca de</h2>
+      <p><strong>AJ PSFree 1.5.0b - PS4 9.00</strong></p>
+      <p>Host webkit para PlayStation 4 con firmware 9.00.</p>
+      <ul>
+        <li>Pulsa el botón para iniciar el exploit.</li>
+        <li>Espera a que aparezca la notificación de GoldHEN.</li>
+        <li>No vuelvas al menú después de cargar GoldHEN.</li>
+      </ul>
+      <p>Agradecimientos a PSFree, Kameleon, Sleirsgoevy, y la comunidad de desarrollo.</p>
+      <button class="close-about" onclick="document.getElementById('aboutModal').classList.add('hidden')">Cerrar</button>
     </div>
   </div>
 
@@ -289,31 +371,39 @@ if (window.applicationCache.status == 0) {
     window.applicationCache.addEventListener('updateready', updateCacheStatus);
     window.applicationCache.addEventListener('cached', updateCacheStatus);
 
-    // ---------- SONIDO DE ÉXITO ----------
-    function playSuccessSound() {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.type = 'sine';
-        oscillator.frequency.value = 880;
-        gainNode.gain.value = 0.3;
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.start();
-        setTimeout(() => {
-          oscillator.stop();
-          audioCtx.close();
-        }, 300);
-      } catch(e) {
-        // silencioso si no soportado
+    // ---------- CONTADOR DE ÉXITOS/FALLOS ----------
+    function getCount(key) {
+      return parseInt(localStorage.getItem(key) || '0', 10);
+    }
+    function setCount(key, value) {
+      localStorage.setItem(key, value);
+    }
+    document.getElementById('successCount').textContent = getCount('successCount');
+    document.getElementById('failCount').textContent = getCount('failCount');
+
+    // ---------- PROGRESO REAL POR LOGS ----------
+    const stagePatterns = [
+      { pattern: /webkit exploit|uaf ssv|relative read|arbitrary r\/w/i, progress: 20, label: 'WebKit exploit' },
+      { pattern: /kernel exploit|aio|double free|leak kernel|arw/i, progress: 50, label: 'Kernel exploit' },
+      { pattern: /patch kernel|jit|setuid|restore sys_aio/i, progress: 80, label: 'Parcheando kernel' },
+      { pattern: /goldhen activado|goldhen loaded/i, progress: 100, label: 'GoldHEN activado' }
+    ];
+    const progressFill = document.getElementById('progressFill');
+    const stageText = document.getElementById('stageText');
+
+    function updateProgressFromLogs(logLine) {
+      for (const stage of stagePatterns) {
+        if (stage.pattern.test(logLine)) {
+          progressFill.style.width = stage.progress + '%';
+          stageText.textContent = stage.label;
+          break;
+        }
       }
     }
 
     // ---------- LÓGICA DE ACTIVACIÓN ----------
     const menu = document.getElementById('menu');
     const loading = document.getElementById('loading');
-    const statusDiv = document.getElementById('status');
     const consoleEl = document.getElementById('console');
     const activateBtn = document.getElementById('activateBtn');
     const autoCheckbox = document.getElementById('autoCheckbox');
@@ -321,8 +411,10 @@ if (window.applicationCache.status == 0) {
     const originalLog = console.log;
     console.log = function(...args) {
       originalLog.apply(console, args);
-      consoleEl.textContent += args.join(' ') + '\n';
+      const line = args.join(' ') + '\n';
+      consoleEl.textContent += line;
       consoleEl.scrollTop = consoleEl.scrollHeight;
+      updateProgressFromLogs(line);
     };
 
     let countdownTimer = null;
@@ -374,7 +466,8 @@ if (window.applicationCache.status == 0) {
       }
       menu.classList.add('hidden');
       loading.classList.remove('hidden');
-      statusDiv.textContent = 'Ejecutando exploit...';
+      stageText.textContent = 'Preparando...';
+      progressFill.style.width = '0%';
       consoleEl.textContent = '';
 
       console.log('Iniciando PSFree-Lapse...');
@@ -382,11 +475,19 @@ if (window.applicationCache.status == 0) {
       import('./alert.mjs').then(({ startExploit }) => {
         return startExploit();
       }).then(() => {
-        statusDiv.textContent = 'GoldHEN cargado correctamente';
+        stageText.textContent = 'GoldHEN activado';
+        progressFill.style.width = '100%';
         console.log('GoldHEN activado');
-        playSuccessSound();
+        // Incrementar éxitos
+        const success = getCount('successCount') + 1;
+        setCount('successCount', success);
+        document.getElementById('successCount').textContent = success;
       }).catch(err => {
-        statusDiv.innerHTML = 'Error: ' + err + '<br><button class="retry-btn" onclick="location.reload()">Reintentar</button>';
+        // Incrementar fallos
+        const fail = getCount('failCount') + 1;
+        setCount('failCount', fail);
+        document.getElementById('failCount').textContent = fail;
+        stageText.innerHTML = 'Error: ' + err + '<br><button class="retry-btn" onclick="location.reload()">Reintentar</button>';
         console.log('Error: ' + err);
       });
     });
