@@ -1,116 +1,109 @@
-<!-- Copyright (C) 2023-2025 anonymous
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Acerca de - AJ PSFree 1.5.0b</title>
+<style>
+  :root {
+    --accent: #00f0ff;
+    --secondary: #ff2a6d;
+    --bg: #0a0a1a;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg);
+    color: #fff;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    max-width: 600px;
+    width: 90%;
+    padding: 30px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid var(--accent);
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,240,255,0.2);
+  }
+  h1 {
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  h2 {
+    color: var(--accent);
+    margin-top: 25px;
+  }
+  p, li {
+    font-size: 0.95rem;
+    color: #ccc;
+    line-height: 1.6;
+  }
+  ul {
+    list-style-position: inside;
+    text-align: left;
+    margin: 0 auto;
+    display: inline-block;
+    text-align: left;
+  }
+  .social-links {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 25px 0;
+  }
+  .social-link {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+  }
+  .social-link:hover {
+    color: var(--accent);
+  }
+  .credit {
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: #666;
+  }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>AJ PSFree 1.5.0b</h1>
+    <p>Host WebKit para PlayStation 4 con firmware 9.00</p>
 
-This file is part of PSFree.
+    <h2>Créditos</h2>
+    <ul>
+      <li><strong>Exploit original:</strong> PSFree (Lapse)</li>
+      <li><strong>Modificaciones y diseño:</strong> aj</li>
+      <li><strong>Agradecimientos:</strong> Kameleon, Sleirsgoevy, ChendoChap, Znullptr y la comunidad PS4</li>
+    </ul>
 
-PSFree is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+    <h2>Redes sociales</h2>
+    <div class="social-links">
+      <a class="social-link" href="https://www.youtube.com/@Oficial-AJ" target="_blank">YouTube</a>
+      <a class="social-link" href="https://www.tiktok.com/@ajk.al" target="_blank">TikTok</a>
+      <a class="social-link" href="https://ajfiles.github.io/files/" target="_blank">Web</a>
+    </div>
 
-PSFree is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+    <p style="margin-top:20px;">
+      Licencia: <a href="./COPYING" download>GNU AGPL-3.0</a>
+    </p>
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-<html>
-    <head>
-        <meta charset='utf-8'>
-        <title>About PSFree</title>
-    </head>
-    <body>
-    PSFree is an exploit chain for PS4 and PS5.<br>
-    PSFree is free software. See <a href='./COPYING'>COPYING</a> for the copyleft information.<br>
-    PSFree's license is GNU-AGPL-3.0-or-later.<br>
-    Here is the source code of this program:<br>
-    <br>
-    HTML files:<br>
-    <a href='./index.html' download>index.html</a><br>
-    <a href='./about.html' download>about.html</a><br>
-    JavaScript files:<br>
-    <table id="jslicense-labels1">
-        <tr>
-            <td><a href="./psfree.mjs">psfree.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./psfree.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./alert.mjs">alert.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./alert.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./config.mjs">config.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./config.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./send.mjs">send.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./send.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./scripts/lapse.mjs">scripts/lapse.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./scripts/lapse.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./rop/800.mjs">rop/800.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./rop/800.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/chain.mjs">module/chain.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/chain.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/int64.mjs">module/int64.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/int64.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/view.mjs">module/view.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/view.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/memtools.mjs">module/memtools.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/memtools.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/utils.mjs">module/utils.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/utils.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/rw.mjs">module/rw.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/rw.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/offset.mjs">module/offset.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/offset.mjs" download>download</a></td>
-        </tr>
-        <tr>
-            <td><a href="./module/mem.mjs">module/mem.mjs</a></td>
-            <td><a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU-AGPL-3.0-or-later</a></td>
-            <td><a href="./module/mem.mjs" download>download</a></td>
-        </tr>
-    </table>
-    kpatch/ files:<br>
-    <a href="./kpatch/utils.h">kpatch/utils.h</a><br>
-    <a href="./kpatch/script.ld">kpatch/script.ld</a><br>
-    <a href="./kpatch/Makefile">kpatch/Makefile</a><br>
-    <a href="./kpatch/80x.c">kpatch/80x.c</a><br>
-    <a href="./kpatch/types.h">kpatch/types.h</a><br>
-    fonts/ files:<br>
-    <a href="./fonts/README.txt">fonts/README.txt</a><br>
-    <a href="./fonts/FONTS.LICENSE">fonts/FONTS.LICENSE</a><br>
-    <a href="./fonts/LiberationMono-Regular.ttf">fonts/LiberationMono-Regular.ttf</a><br>
-    </body>
+    <div class="credit">AJ PSFree 1.5.0b - PS4 9.00</div>
+  </div>
+</body>
 </html>
